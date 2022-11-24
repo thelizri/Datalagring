@@ -1,4 +1,4 @@
-
+CREATE TYPE skill AS ENUM ('Beginner', 'Intermediate', 'Advanced');
 --Classes
 CREATE TABLE lesson (
   database_id SERIAL UNIQUE NOT NULL,
@@ -215,7 +215,7 @@ CREATE TABLE rented_instrument (
 CREATE TABLE proficiencies (
   instrument varchar(100) NOT NULL,
   instructor_id int NOT NULL,
-  skill_Level varchar(100) NOT NULL,
+  skill_Level skill NOT NULL,
   PRIMARY KEY (instrument, instructor_id),
 	constraint fk_instructors
 	foreign key (instructor_id)
