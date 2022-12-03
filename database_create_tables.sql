@@ -119,6 +119,7 @@ CREATE TABLE physical_instruments
      instrument_id VARCHAR(100) UNIQUE NOT NULL,
      brand         VARCHAR(100) NOT NULL,
      price         INT NOT NULL,
+     instrument_type VARCHAR(100) NOT NULL,
      PRIMARY KEY (database_id)
   );
 
@@ -236,7 +237,7 @@ CREATE TABLE bridge_sibling
      PRIMARY KEY(sibling_id_1, sibling_id_2)
   );
 
-CREATE TABLE bride_student_to_booking
+CREATE TABLE bridge_student_to_booking
   (
      student_db_id INT NOT NULL,
      booking_db_id INT NOT NULL,
