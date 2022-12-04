@@ -1,4 +1,4 @@
-CREATE VIEW next_week_group_lessons AS 
+CREATE VIEW next_week_ensemble_lessons AS 
 SELECT *,
 	CASE
 					WHEN "Max number of students" - "Students signed up" > 0 
