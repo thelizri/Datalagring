@@ -36,4 +36,6 @@ AND EXTRACT(YEAR FROM date) = EXTRACT(YEAR FROM CURRENT_DATE)
 ORDER BY "Total" DESC;
 
 --Example on how to use it
---SELECT * FROM overworked_employees
+-- SELECT *
+-- FROM OVERWORKED_EMPLOYEES
+-- WHERE "Total" > 3
