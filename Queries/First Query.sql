@@ -1,4 +1,3 @@
-/*
 CREATE VIEW LESSONS_PER_MONTH AS
 SELECT "Private Lessons",
 	"Group Lessons",
@@ -39,6 +38,6 @@ FULL OUTER JOIN
 AND PRIVATE_AND_GROUP."Month" = ENSEM."Month"
 ORDER BY PRIVATE_AND_GROUP."Year",
 	PRIVATE_AND_GROUP."Month";
-*/
-select * from lessons_per_month
-where "Year"=2021
+
+SELECT * FROM lessons_per_month
+WHERE "Year"=2021
