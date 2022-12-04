@@ -39,6 +39,7 @@ AND PRIVATE_AND_GROUP."Month" = ENSEM."Month"
 ORDER BY PRIVATE_AND_GROUP."Year",
 	PRIVATE_AND_GROUP."Month";
 
---Example on how to use it
---SELECT * FROM lessons_per_month
---WHERE "Year"=2021
+-- Example on how to use it
+-- SELECT *
+-- FROM LESSONS_PER_MONTH
+-- WHERE "Year" = 2021
