@@ -66,7 +66,7 @@ WHERE NOT EXISTS
 			FROM BRIDGE_SIBLING
 			WHERE SIBLING_ID_1 = STUDENT.DATABASE_ID
 				OR SIBLING_ID_2 = STUDENT.DATABASE_ID )
-ORDER BY "Number of Siblings"
+ORDER BY "Number of Siblings";
 
 -- Example on how to use it
 -- SELECT *
@@ -144,7 +144,7 @@ FROM
 		FROM ENSEMBLE
 		INNER JOIN BOOKING_TABLE ON ENSEMBLE.DATABASE_ID = BOOKING_TABLE.ENSEMBLE_DB_ID
 		WHERE DATE_PART('week', date) = (DATE_PART('week', CURRENT_DATE) + 1)) AS FOO
-ORDER BY "Genre", "Day"
+ORDER BY "Genre", "Day";
 
 -- Example on how to use it
 -- SELECT *
