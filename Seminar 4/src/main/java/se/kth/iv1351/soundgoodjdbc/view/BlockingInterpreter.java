@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class BlockingInterpreter {
     private static final String PROMPT = "> ";
     private final Scanner console = new Scanner(System.in);
-    private Controller ctrl;
+    private Controller controller;
     private boolean keepReceivingCmds = false;
 
     /**
@@ -16,7 +16,7 @@ public class BlockingInterpreter {
      * @param ctrl The controller used by this instance.
      */
     public BlockingInterpreter(Controller ctrl) {
-        this.ctrl = ctrl;
+        this.controller = ctrl;
     }
 
     /**
@@ -48,40 +48,11 @@ public class BlockingInterpreter {
                     case QUIT:
                         keepReceivingCmds = false;
                         break;
-                    case NEW:
-                        ctrl.createAccount(cmdLine.getParameter(0));
-                        break;
-                    case DELETE:
-                        ctrl.deleteAccount(cmdLine.getParameter(0));
-                        break;
                     case LIST:
-                        List<? extends AccountDTO> accounts = null;
-                        if (cmdLine.getParameter(0).equals("")) {
-                            accounts = ctrl.getAllAccounts();
-                        } else {
-                            accounts = ctrl.getAccountsForHolder(cmdLine.getParameter(0));
-                        }
-                        for (AccountDTO account : accounts) {
-                            System.out.println("acct no: " + account.getAccountNo() + ", "
-                                    + "holder: " + account.getHolderName() + ", "
-                                    + "balance: " + account.getBalance());
-                        }
                         break;
-                    case DEPOSIT:
-                        ctrl.deposit(cmdLine.getParameter(0),
-                                Integer.parseInt(cmdLine.getParameter(1)));
+                    case RENT:
                         break;
-                    case WITHDRAW:
-                        ctrl.withdraw(cmdLine.getParameter(0),
-                                Integer.parseInt(cmdLine.getParameter(1)));
-                        break;
-                    case BALANCE:
-                        AccountDTO acct = ctrl.getAccount(cmdLine.getParameter(0));
-                        if (acct != null) {
-                            System.out.println(acct.getBalance());
-                        } else {
-                            System.out.println("No such account");
-                        }
+                    case TERMINATE:
                         break;
                     default:
                         System.out.println("illegal command");
