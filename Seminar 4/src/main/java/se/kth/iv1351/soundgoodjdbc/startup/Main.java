@@ -14,5 +14,18 @@ public class Main {
         }catch (Exception e){
            e.printStackTrace();
         }
+
+        try {
+            Statement st = connection.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * from student;");
+            while(rs.next()){
+                System.out.println(rs.getString("email"));
+            }
+            rs.close();
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }
