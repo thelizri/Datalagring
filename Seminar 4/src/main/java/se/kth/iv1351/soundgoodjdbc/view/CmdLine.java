@@ -1,5 +1,9 @@
 package main.java.se.kth.iv1351.soundgoodjdbc.view;
 
+/**
+ * One line of user input, which should be a command and parameters associated
+ * with that command (if any).
+ */
 class CmdLine {
     private static final String PARAM_DELIMETER = " ";
     private String[] params;
