@@ -1,31 +1,21 @@
 package main.java.se.kth.iv1351.soundgoodjdbc.startup;
 
+import main.java.se.kth.iv1351.soundgoodjdbc.controller.Controller;
+import main.java.se.kth.iv1351.soundgoodjdbc.view.BlockingInterpreter;
+
 import java.sql.*;
 
 
 public class Main {
-    public static void main(String[] args){
-        Connection connection = null;
-
-        try{
-            Class.forName("org.postgresql.Driver");
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/SoundGood","postgres","password");
-            if(connection != null) System.out.println("Connection ok");
-        }catch (Exception e){
-           e.printStackTrace();
-        }
-
+    /**
+     * @param args There are no command line arguments.
+     */
+    public static void main(String[] args) {
         try {
-            Statement st = connection.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * from student;");
-            while(rs.next()){
-                System.out.println(rs.getString("email"));
-            }
-            rs.close();
-            st.close();
-        } catch (SQLException e) {
+            new BlockingInterpreter(new Controller()).handleCmds();
+        } catch(Exception e) {
+            System.out.println("Could not connect to SoundGood");
             e.printStackTrace();
         }
-
     }
 }
