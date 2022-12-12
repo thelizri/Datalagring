@@ -9,7 +9,32 @@ import java.sql.*;
  */
 public class SoundGoodDAO {
 
+    private static final String INSTRUMENT_TABLE_NAME = "physical_instruments";
+    private static final String INSTRUMENT_PK_COLUMN_NAME = "database_id";
+    private static final String INSTRUMENT_ID_COLUMN_NAME = "instrument_id";
+    private static final String INSTRUMENT_TYPE_COLUMN_NAME = "instrument_type";
+    private static final String INSTRUMENT_BRAND_COLUMN_NAME = "brand";
+    private static final String INSTRUMENT_PRICE_COLUMN_NAME = "price";
+
+    private static final String RENT_INSTRUMENT_TABLE_NAME = "rented_instrument";
+    private static final String RENT_INSTRUMENT_RECEIPT_ID_COLUMN_NAME = "receipt_id";
+    private static final String RENT_INSTRUMENT_START_DATE_COLUMN_NAME = "start_date";
+    private static final String RENT_INSTRUMENT_END_DATE_COLUMN_NAME = "end_date";
+    private static final String RENT_INSTRUMENT_FK_PK_STUDENT_COLUMN_NAME = "student_db_id";
+    private static final String RENT_INSTRUMENT_FK_PK_INSTRUMENT_COLUMN_NAME = "instrument_db_id";
+
+    private static final String STUDENT_TABLE_NAME = "student";
+    private static final String STUDENT_TABLE_PK_COLUMN_NAME = "database_id";
+    private static final String STUDENT_TABLE_PERSONALNUMBER_COLUMN_NAME = "personal_number";
+    private static final String STUDENT_TABLE_FULLNAME_COLUMN_NAME = "full_name";
+    private static final String STUDENT_TABLE_EMAIL_COLUMN_NAME = "email";
+    private static final String STUDENT_TABLE_STUDENT_ID_COLUMN_NAME = "student_id";
+
+
     private Connection connection;
+    private PreparedStatement listInstruments;
+    private PreparedStatement rentInstrument;
+    private PreparedStatement terminateRental;
 
     public SoundGoodDAO() throws SoundGoodDBException {
         try {
