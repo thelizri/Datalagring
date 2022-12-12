@@ -23,6 +23,7 @@ public class Main {
         try {
             SoundGoodDAO sg = new SoundGoodDAO();
             sg.listInstruments("Piano");
+            sg.listInstruments("Guitar");
         } catch (SoundGoodDBException e) {
             e.printStackTrace();
         }

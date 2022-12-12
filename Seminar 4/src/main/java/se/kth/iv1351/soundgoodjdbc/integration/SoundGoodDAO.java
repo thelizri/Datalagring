@@ -107,12 +107,15 @@ public class SoundGoodDAO {
         try{
             listInstruments.setString(1, type);
             ResultSet rs = listInstruments.executeQuery();
+
             while (rs.next()) {
                 System.out.println(rs.getString(INSTRUMENT_ID_COLUMN_NAME)+" "+rs.getString(INSTRUMENT_BRAND_COLUMN_NAME)
                 +" "+rs.getString(INSTRUMENT_TYPE_COLUMN_NAME)+" "+rs.getString(INSTRUMENT_PRICE_COLUMN_NAME)+"kr");
             }
+
+            rs.close();
         }catch(SQLException exception){
-            handleException("Error", exception);
+            handleException("Could not list instruments.", exception);
         }
     }
 }
