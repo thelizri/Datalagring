@@ -38,7 +38,7 @@ public class SoundGoodDAO {
 
     public SoundGoodDAO() throws SoundGoodDBException {
         try {
-            connectToBankDB();
+            connectToDB();
             //prepareStatements();
         } catch (ClassNotFoundException | SQLException exception) {
             throw new SoundGoodDBException("Could not connect to datasource.", exception);
@@ -46,10 +46,14 @@ public class SoundGoodDAO {
     }
 
 
-    private void connectToBankDB() throws ClassNotFoundException, SQLException {
-        Class.forName("org.postgresql.Driver");
-        connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/SoundGood","postgres","password");
-        connection.setAutoCommit(false);
+    private void connectToDB() throws ClassNotFoundException, SQLException {
+        try{
+            Class.forName("org.postgresql.Driver");
+            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/SoundGood","postgres","password");
+            connection.setAutoCommit(false);
+        }catch(ClassNotFoundException | SQLException exception){
+            exception.printStackTrace();
+        }
     }
 
     /**
@@ -65,27 +69,27 @@ public class SoundGoodDAO {
         }
     }
 
-    private void handleException(String failureMsg, Exception cause) throws SoundGoodDBException {
-        String completeFailureMsg = failureMsg;
+    private void handleException(String failureMessage, Exception exception) throws SoundGoodDBException {
+        String completeFailureMessage = failureMessage;
         try {
             connection.rollback();
-        } catch (SQLException rollbackExc) {
-            completeFailureMsg = completeFailureMsg +
-                    ". Also failed to rollback transaction because of: " + rollbackExc.getMessage();
+        } catch (SQLException rollbackException) {
+            completeFailureMessage +=
+                    ". Also failed to rollback transaction because of: " + rollbackException.getMessage();
         }
 
-        if (cause != null) {
-            throw new SoundGoodDBException(failureMsg, cause);
+        if (exception != null) {
+            throw new SoundGoodDBException(failureMessage, exception);
         } else {
-            throw new SoundGoodDBException(failureMsg);
+            throw new SoundGoodDBException(failureMessage);
         }
     }
 
-    private void closeResultSet(String failureMsg, ResultSet result) throws SoundGoodDBException {
+    private void closeResultSet(String failureMessage, ResultSet result) throws SoundGoodDBException {
         try {
             result.close();
-        } catch (Exception e) {
-            throw new SoundGoodDBException(failureMsg + " Could not close result set.", e);
+        } catch (Exception exception) {
+            throw new SoundGoodDBException(failureMessage + " Could not close result set.", exception);
         }
     }
 }
