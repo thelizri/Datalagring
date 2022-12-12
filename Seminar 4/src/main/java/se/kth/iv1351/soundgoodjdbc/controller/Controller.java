@@ -2,7 +2,10 @@ package main.java.se.kth.iv1351.soundgoodjdbc.controller;
 
 import main.java.se.kth.iv1351.soundgoodjdbc.integration.SoundGoodDAO;
 import main.java.se.kth.iv1351.soundgoodjdbc.integration.SoundGoodDBException;
+import main.java.se.kth.iv1351.soundgoodjdbc.model.InstrumentDTO;
 import main.java.se.kth.iv1351.soundgoodjdbc.model.InstrumentException;
+
+import java.util.List;
 
 /**
  * This is the application's only controller, all calls to the model pass here.
@@ -28,6 +31,14 @@ public class Controller {
             soundGoodDb.commit();
         } catch (SoundGoodDBException e) {
             throw new InstrumentException(failureMsg, e);
+        }
+    }
+
+    public void listInstrument(String instrumentType) throws InstrumentException {
+        try {
+            soundGoodDb.listInstruments(instrumentType);
+        } catch (Exception e) {
+            throw new InstrumentException("Could not list instruments", e);
         }
     }
 

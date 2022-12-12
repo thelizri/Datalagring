@@ -1,7 +1,10 @@
 package main.java.se.kth.iv1351.soundgoodjdbc.view;
 
 import main.java.se.kth.iv1351.soundgoodjdbc.controller.Controller;
+import main.java.se.kth.iv1351.soundgoodjdbc.integration.SoundGoodDAO;
+import main.java.se.kth.iv1351.soundgoodjdbc.model.InstrumentDTO;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class BlockingInterpreter {
@@ -46,13 +49,21 @@ public class BlockingInterpreter {
                         }
                         break;
                     case QUIT:
+                        System.out.println("Terminating session...");
                         keepReceivingCmds = false;
                         break;
+                    case EXIT:
+                        System.out.println("Terminating session...");
+                        keepReceivingCmds = false;
                     case LIST:
+                        controller.listInstrument(cmdLine.getParameter(0));
                         break;
                     case RENT:
                         break;
                     case TERMINATE:
+                        break;
+                    case ILLEGAL_COMMAND:
+                        System.out.println("illegal command");
                         break;
                     default:
                         System.out.println("illegal command");

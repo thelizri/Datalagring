@@ -13,18 +13,12 @@ public class Main {
      * @param args There are no command line arguments.
      */
     public static void main(String[] args) {
-        /*
         try {
+            SoundGoodDAO sg = new SoundGoodDAO();
+            sg.listInstruments("guitar");
             new BlockingInterpreter(new Controller()).handleCmds();
         } catch(Exception e) {
             System.out.println("Could not connect to SoundGood");
-            e.printStackTrace();
-        }*/
-        try {
-            SoundGoodDAO sg = new SoundGoodDAO();
-            sg.listInstruments("Piano");
-            sg.listInstruments("Guitar");
-        } catch (SoundGoodDBException e) {
             e.printStackTrace();
         }
     }

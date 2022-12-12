@@ -23,6 +23,10 @@ public enum Command {
      */
     QUIT,
     /**
+     * Leave the chat application.
+     */
+    EXIT,
+    /**
      * None of the valid commands above was specified.
      */
     ILLEGAL_COMMAND

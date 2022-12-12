@@ -3,21 +3,23 @@ package main.java.se.kth.iv1351.soundgoodjdbc.model;
 /**
  * Represent an instance of an instrument from the SoundGood database
  */
-public class Instrument {
-    private int instrumentId;
+public class Instrument implements InstrumentDTO {
+    private int databaseId;
+    private String instrumentId;
     private String type;
     private String brand;
     private int price;
 
     /**
      * Creates a new instance of the instrument.
-     *
+     * @param databaseId the database id of the instrument
      * @param instrumentId the id of the instrument.
      * @param type the type of the instrument.
      * @param brand the brand of the instrument.
      * @param price the price of the instrument.
      */
-    public Instrument(int instrumentId, String type, String brand, int price) {
+    public Instrument(int databaseId, String instrumentId, String type, String brand, int price) {
+        this.databaseId = databaseId;
         this.instrumentId = instrumentId;
         this.type = type;
         this.brand = brand;
@@ -29,7 +31,7 @@ public class Instrument {
      *
      * @return the instrument id of the instrument.
      */
-    public int getInstrumentId() {
+    public String getInstrumentId() {
         return instrumentId;
     }
 
