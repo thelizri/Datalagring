@@ -56,7 +56,6 @@ public class SoundGoodDAO {
                 "\tBRAND,\n" +
                 "\tPRICE,\n" +
                 "\tINSTRUMENT_TYPE\n" +
-                "\tDATABASE_ID\n" +
                 "FROM PHYSICAL_INSTRUMENTS\n" +
                 "LEFT JOIN RENTED_INSTRUMENT ON PHYSICAL_INSTRUMENTS.DATABASE_ID = RENTED_INSTRUMENT.INSTRUMENT_DB_ID\n" +
                 "WHERE RENTED_INSTRUMENT.INSTRUMENT_DB_ID IS NULL and instrument_type = ?");
@@ -113,13 +112,12 @@ public class SoundGoodDAO {
 
         List<Instrument> instruments = null;
         try{
-            System.out.println("try");
             listInstruments.setString(1, type);
             ResultSet rs = listInstruments.executeQuery();
             instruments = new ArrayList<Instrument>();
             while (rs.next()) {
-                System.out.println("brand");
-                System.out.println(rs.getString("brand"));
+                System.out.println(rs.getString(INSTRUMENT_ID_COLUMN_NAME)+" "+rs.getString(INSTRUMENT_TYPE_COLUMN_NAME)+" "
+                        +rs.getString(INSTRUMENT_BRAND_COLUMN_NAME)+" "+rs.getInt(INSTRUMENT_PRICE_COLUMN_NAME));
                 /*
                 instruments.add(new Instrument(rs.getInt(INSTRUMENT_PK_COLUMN_NAME),
                         rs.getString(INSTRUMENT_ID_COLUMN_NAME),
