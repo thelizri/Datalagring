@@ -58,8 +58,7 @@ public class BlockingInterpreter {
                         keepReceivingCmds = false;
                     case LIST:
                         List<Instrument> instruments = controller.listInstrument(cmdLine.getParameter(0));
-                        for (Instrument instrument:
-                             instruments) {
+                        for (Instrument instrument: instruments) {
                             System.out.println(instrument);
                         }
                         break;

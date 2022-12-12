@@ -116,9 +116,6 @@ public class SoundGoodDAO {
             ResultSet rs = listInstruments.executeQuery();
             instruments = new ArrayList<Instrument>();
             while (rs.next()) {
-                System.out.println(rs.getString(INSTRUMENT_ID_COLUMN_NAME)+" "+rs.getString(INSTRUMENT_TYPE_COLUMN_NAME)+" "
-                        +rs.getString(INSTRUMENT_BRAND_COLUMN_NAME)+" "+rs.getInt(INSTRUMENT_PRICE_COLUMN_NAME));
-
                 instruments.add(new Instrument(
                         rs.getString(INSTRUMENT_ID_COLUMN_NAME),
                         rs.getString(INSTRUMENT_TYPE_COLUMN_NAME),
