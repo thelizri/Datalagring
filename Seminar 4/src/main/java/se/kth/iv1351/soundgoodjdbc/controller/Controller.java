@@ -35,7 +35,7 @@ public class Controller {
         }
     }
 
-    public List<Instrument> listInstrument(String instrumentType) throws InstrumentException {
+    public List<? extends InstrumentDTO> listInstrument(String instrumentType) throws InstrumentException {
         try {
             return soundGoodDb.listInstruments(instrumentType);
         } catch (Exception e) {

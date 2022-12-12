@@ -57,8 +57,8 @@ public class BlockingInterpreter {
                         System.out.println("Terminating session...");
                         keepReceivingCmds = false;
                     case LIST:
-                        List<Instrument> instruments = controller.listInstrument(cmdLine.getParameter(0));
-                        for (Instrument instrument: instruments) {
+                        List<? extends InstrumentDTO> instruments = controller.listInstrument(cmdLine.getParameter(0));
+                        for (InstrumentDTO instrument: instruments) {
                             System.out.println(instrument);
                         }
                         break;
