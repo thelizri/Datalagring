@@ -39,12 +39,22 @@ public class SoundGoodDAO {
     public SoundGoodDAO() throws SoundGoodDBException {
         try {
             connectToDB();
-            //prepareStatements();
+            prepareStatements();
         } catch (ClassNotFoundException | SQLException exception) {
             throw new SoundGoodDBException("Could not connect to datasource.", exception);
         }
     }
 
+
+    private void prepareStatements() throws SQLException{
+        listInstruments = connection.prepareStatement("SELECT INSTRUMENT_ID,\n" +
+                "\tBRAND,\n" +
+                "\tPRICE,\n" +
+                "\tINSTRUMENT_TYPE\n" +
+                "FROM PHYSICAL_INSTRUMENTS\n" +
+                "LEFT JOIN RENTED_INSTRUMENT ON PHYSICAL_INSTRUMENTS.DATABASE_ID = RENTED_INSTRUMENT.INSTRUMENT_DB_ID\n" +
+                "WHERE RENTED_INSTRUMENT.INSTRUMENT_DB_ID IS NULL and instrument_type = ?");
+    }
 
     private void connectToDB() throws ClassNotFoundException, SQLException {
         try{
@@ -69,7 +79,7 @@ public class SoundGoodDAO {
         }
     }
 
-    private void handleException(String failureMessage, Exception exception) throws SoundGoodDBException {
+    public void handleException(String failureMessage, Exception exception) throws SoundGoodDBException {
         String completeFailureMessage = failureMessage;
         try {
             connection.rollback();
@@ -90,6 +100,19 @@ public class SoundGoodDAO {
             result.close();
         } catch (Exception exception) {
             throw new SoundGoodDBException(failureMessage + " Could not close result set.", exception);
+        }
+    }
+
+    public void listInstruments(String type) throws SoundGoodDBException {
+        try{
+            listInstruments.setString(1, type);
+            ResultSet rs = listInstruments.executeQuery();
+            while (rs.next()) {
+                System.out.println(rs.getString(INSTRUMENT_ID_COLUMN_NAME)+" "+rs.getString(INSTRUMENT_BRAND_COLUMN_NAME)
+                +" "+rs.getString(INSTRUMENT_TYPE_COLUMN_NAME)+" "+rs.getString(INSTRUMENT_PRICE_COLUMN_NAME)+"kr");
+            }
+        }catch(SQLException exception){
+            handleException("Error", exception);
         }
     }
 }
