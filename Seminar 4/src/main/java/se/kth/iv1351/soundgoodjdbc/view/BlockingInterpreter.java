@@ -2,6 +2,7 @@ package main.java.se.kth.iv1351.soundgoodjdbc.view;
 
 import main.java.se.kth.iv1351.soundgoodjdbc.controller.Controller;
 import main.java.se.kth.iv1351.soundgoodjdbc.integration.SoundGoodDAO;
+import main.java.se.kth.iv1351.soundgoodjdbc.model.Instrument;
 import main.java.se.kth.iv1351.soundgoodjdbc.model.InstrumentDTO;
 
 import java.util.List;
@@ -56,7 +57,11 @@ public class BlockingInterpreter {
                         System.out.println("Terminating session...");
                         keepReceivingCmds = false;
                     case LIST:
-                        controller.listInstrument(cmdLine.getParameter(0));
+                        List<Instrument> instruments = controller.listInstrument(cmdLine.getParameter(0));
+                        for (Instrument instrument:
+                             instruments) {
+                            System.out.println(instrument);
+                        }
                         break;
                     case RENT:
                         break;
