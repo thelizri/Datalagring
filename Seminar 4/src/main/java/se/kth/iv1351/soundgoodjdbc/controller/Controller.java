@@ -54,6 +54,10 @@ public class Controller {
             int studentDbID = soundGoodDb.getStudentDatabaseID(studentPersonalNumber);
             System.out.println(studentDbID);
 
+            //Get database id of instrument
+            int instrumentDbID = soundGoodDb.getInstrumentDatabaseID(instrumentProductID);
+            System.out.println(instrumentDbID);
+
         } catch(Exception e){
             throw new InstrumentException("Could not rent an instrument", e);
         }
