@@ -14,30 +14,9 @@ import java.util.List;
  */
 public class SoundGoodDAO {
 
-    private static final String INSTRUMENT_TABLE_NAME = "physical_instruments";
-    private static final String INSTRUMENT_PK_COLUMN_NAME = "database_id";
-    private static final String INSTRUMENT_ID_COLUMN_NAME = "instrument_id";
-    private static final String INSTRUMENT_TYPE_COLUMN_NAME = "instrument_type";
-    private static final String INSTRUMENT_BRAND_COLUMN_NAME = "brand";
-    private static final String INSTRUMENT_PRICE_COLUMN_NAME = "price";
-
-    private static final String RENT_INSTRUMENT_TABLE_NAME = "rented_instrument";
-    private static final String RENT_INSTRUMENT_RECEIPT_ID_COLUMN_NAME = "receipt_id";
-    private static final String RENT_INSTRUMENT_START_DATE_COLUMN_NAME = "start_date";
-    private static final String RENT_INSTRUMENT_END_DATE_COLUMN_NAME = "end_date";
-    private static final String RENT_INSTRUMENT_FK_PK_STUDENT_COLUMN_NAME = "student_db_id";
-    private static final String RENT_INSTRUMENT_FK_PK_INSTRUMENT_COLUMN_NAME = "instrument_db_id";
-
-    private static final String STUDENT_TABLE_NAME = "student";
-    private static final String STUDENT_TABLE_PK_COLUMN_NAME = "database_id";
-    private static final String STUDENT_TABLE_PERSONALNUMBER_COLUMN_NAME = "personal_number";
-    private static final String STUDENT_TABLE_FULLNAME_COLUMN_NAME = "full_name";
-    private static final String STUDENT_TABLE_EMAIL_COLUMN_NAME = "email";
-    private static final String STUDENT_TABLE_STUDENT_ID_COLUMN_NAME = "student_id";
-
-
     private Connection connection;
     private PreparedStatement listInstruments;
+    private PreparedStatement getAmountOfRentalsForStudent;
     private PreparedStatement rentInstrument;
     private PreparedStatement terminateRental;
 
@@ -52,13 +31,21 @@ public class SoundGoodDAO {
 
 
     private void prepareStatements() throws SQLException{
-        listInstruments = connection.prepareStatement("SELECT INSTRUMENT_ID,\n" +
-                "\tBRAND,\n" +
-                "\tPRICE,\n" +
-                "\tINSTRUMENT_TYPE\n" +
+        listInstruments = connection.prepareStatement("SELECT DISTINCT INSTRUMENT_ID, BRAND, PRICE, INSTRUMENT_TYPE\n" +
                 "FROM PHYSICAL_INSTRUMENTS\n" +
                 "LEFT JOIN RENTED_INSTRUMENT ON PHYSICAL_INSTRUMENTS.DATABASE_ID = RENTED_INSTRUMENT.INSTRUMENT_DB_ID\n" +
-                "WHERE RENTED_INSTRUMENT.INSTRUMENT_DB_ID IS NULL and instrument_type = ?");
+                "WHERE (RENTED_INSTRUMENT.INSTRUMENT_DB_ID IS NULL OR END_DATE IS NOT NULL)\n" +
+                "AND INSTRUMENT_TYPE = ?\n" +
+                "ORDER BY PRICE");
+
+        getAmountOfRentalsForStudent = connection.prepareStatement("SELECT COUNT(*) AS \"Count\"\n" +
+                "FROM PHYSICAL_INSTRUMENTS\n" +
+                "INNER JOIN RENTED_INSTRUMENT ON PHYSICAL_INSTRUMENTS.DATABASE_ID = RENTED_INSTRUMENT.INSTRUMENT_DB_ID\n" +
+                "INNER JOIN STUDENT ON RENTED_INSTRUMENT.STUDENT_DB_ID = STUDENT.DATABASE_ID\n" +
+                "WHERE END_DATE IS NULL\n" +
+                "\tAND PERSONAL_NUMBER = ?\n" +
+                "GROUP BY STUDENT_DB_ID,\n" +
+                "\tSTUDENT.PERSONAL_NUMBER");
     }
 
     private void connectToDB() throws ClassNotFoundException, SQLException {
@@ -117,10 +104,10 @@ public class SoundGoodDAO {
             instruments = new ArrayList<Instrument>();
             while (rs.next()) {
                 instruments.add(new Instrument(
-                        rs.getString(INSTRUMENT_ID_COLUMN_NAME),
-                        rs.getString(INSTRUMENT_TYPE_COLUMN_NAME),
-                        rs.getString(INSTRUMENT_BRAND_COLUMN_NAME),
-                        rs.getInt(INSTRUMENT_PRICE_COLUMN_NAME)
+                        rs.getString("INSTRUMENT_ID"),
+                        rs.getString("INSTRUMENT_TYPE"),
+                        rs.getString("BRAND"),
+                        rs.getInt("PRICE")
                 ));
             }
             rs.close();
