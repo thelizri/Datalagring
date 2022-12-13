@@ -40,12 +40,12 @@ public class SoundGoodDAO {
                 "AND INSTRUMENT_TYPE = ?\n" +
                 "ORDER BY PRICE");
 
-        getAmountOfRentalsForStudent = connection.prepareStatement("SELECT COUNT(*) AS \"COUNT\"\n" +
-                "FROM PHYSICAL_INSTRUMENTS\n" +
-                "INNER JOIN RENTED_INSTRUMENT ON PHYSICAL_INSTRUMENTS.DATABASE_ID = RENTED_INSTRUMENT.INSTRUMENT_DB_ID\n" +
-                "INNER JOIN STUDENT ON RENTED_INSTRUMENT.STUDENT_DB_ID = STUDENT.DATABASE_ID\n" +
-                "WHERE END_DATE IS NULL AND PERSONAL_NUMBER = ?\n" +
-                "GROUP BY STUDENT_DB_ID, STUDENT.PERSONAL_NUMBER");
+        getAmountOfRentalsForStudent = connection.prepareStatement("SELECT (COUNT(*)-1) AS \"COUNT\", STUDENT_DB_ID, PERSONAL_NUMBER\n" +
+                "FROM RENTED_INSTRUMENT\n" +
+                "RIGHT JOIN STUDENT ON RENTED_INSTRUMENT.STUDENT_DB_ID = STUDENT.DATABASE_ID\n" +
+                "WHERE PERSONAL_NUMBER = ?\n" +
+                "GROUP BY STUDENT_DB_ID, PERSONAL_NUMBER\n" +
+                "ORDER BY STUDENT_DB_ID");
 
         getDatabaseIDofStudent = connection.prepareStatement("SELECT DATABASE_ID FROM STUDENT\n" +
                 "WHERE PERSONAL_NUMBER = ?");
