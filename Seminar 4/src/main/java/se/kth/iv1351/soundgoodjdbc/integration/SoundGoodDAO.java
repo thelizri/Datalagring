@@ -46,7 +46,7 @@ public class SoundGoodDAO {
                 "WHERE END_DATE IS NULL AND PERSONAL_NUMBER = ?\n" +
                 "GROUP BY STUDENT_DB_ID, STUDENT.PERSONAL_NUMBER");
 
-        getDatabaseIDOfStudent = connection.prepareStatement("SELECT PERSONAL_NUMBER FROM STUDENT\n" +
+        getDatabaseIDOfStudent = connection.prepareStatement("SELECT DATABASE_ID FROM STUDENT\n" +
                 "WHERE PERSONAL_NUMBER = ?");
     }
 
