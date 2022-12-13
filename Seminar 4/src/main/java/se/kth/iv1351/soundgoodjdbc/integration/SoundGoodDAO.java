@@ -38,14 +38,12 @@ public class SoundGoodDAO {
                 "AND INSTRUMENT_TYPE = ?\n" +
                 "ORDER BY PRICE");
 
-        getAmountOfRentalsForStudent = connection.prepareStatement("SELECT COUNT(*) AS \"Count\"\n" +
+        getAmountOfRentalsForStudent = connection.prepareStatement("SELECT COUNT(*) AS \"COUNT\"\n" +
                 "FROM PHYSICAL_INSTRUMENTS\n" +
                 "INNER JOIN RENTED_INSTRUMENT ON PHYSICAL_INSTRUMENTS.DATABASE_ID = RENTED_INSTRUMENT.INSTRUMENT_DB_ID\n" +
                 "INNER JOIN STUDENT ON RENTED_INSTRUMENT.STUDENT_DB_ID = STUDENT.DATABASE_ID\n" +
-                "WHERE END_DATE IS NULL\n" +
-                "\tAND PERSONAL_NUMBER = ?\n" +
-                "GROUP BY STUDENT_DB_ID,\n" +
-                "\tSTUDENT.PERSONAL_NUMBER");
+                "WHERE END_DATE IS NULL AND PERSONAL_NUMBER = ?\n" +
+                "GROUP BY STUDENT_DB_ID, STUDENT.PERSONAL_NUMBER");
     }
 
     private void connectToDB() throws ClassNotFoundException, SQLException {
