@@ -116,6 +116,20 @@ public class SoundGoodDAO {
         return -1;
     }
 
+    public int getStudentDatabaseID(String studentPersonalNumber) throws SoundGoodDBException{
+        try{
+            getDatabaseIDofStudent.setString(1,studentPersonalNumber);
+            ResultSet rs = getDatabaseIDofStudent.executeQuery();
+            if(rs.next()){
+                return rs.getInt("DATABASE_ID");
+            }
+            rs.close();
+        }catch(Exception exception){
+            handleException("Could not retrieve database id of student", exception);
+        }
+        return -1;
+    }
+
     public List<Instrument> listInstruments(String type) throws SoundGoodDBException {
 
         List<Instrument> instruments = null;

@@ -43,13 +43,21 @@ public class Controller {
         }
     }
 
-    public void rentInstrument(String studentPersonalNumber, String instrumentProductID) throws InstrumentException{
+    public String rentInstrument(String studentPersonalNumber, String instrumentProductID) throws InstrumentException{
         try{
             int amountOfRentals = soundGoodDb.getAmountOfRentalsByStudent(studentPersonalNumber);
-            System.out.println("Student: "+studentPersonalNumber+" has this amount of rentals: "+amountOfRentals);
+            if(amountOfRentals>=2){
+                return "You already have 2 active rentals under your name.";
+            }
+            System.out.println(amountOfRentals);
+            //Get database id of student
+            int studentDbID = soundGoodDb.getStudentDatabaseID(studentPersonalNumber);
+            System.out.println(studentDbID);
+
         } catch(Exception e){
             throw new InstrumentException("Could not rent an instrument", e);
         }
+        return "Success";
     }
 
 }
