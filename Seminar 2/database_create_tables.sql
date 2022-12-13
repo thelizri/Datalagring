@@ -209,7 +209,7 @@ CREATE TABLE rented_instrument
      end_date         TIMESTAMP,
      student_db_id    INT NOT NULL,
      instrument_db_id INT NOT NULL,
-     PRIMARY KEY (student_db_id, instrument_db_id),
+     PRIMARY KEY (student_db_id, instrument_db_id, start_date),
      CONSTRAINT fk_instrument FOREIGN KEY (instrument_db_id) REFERENCES
      physical_instruments(database_id),
      CONSTRAINT fk_person FOREIGN KEY (student_db_id) REFERENCES student(

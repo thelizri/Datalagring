@@ -2142,3 +2142,15 @@ WHERE DATE_PART('week', date) = (DATE_PART('week', CURRENT_DATE) + 1)
 	AND STUDENT.DATABASE_ID < (BOOKING_TABLE.DATABASE_ID-100)
 	AND STUDENT.DATABASE_ID < 45
 	AND STUDENT.DATABASE_ID > 33;
+
+insert into rented_instrument (receipt_id, start_date, student_db_id, instrument_db_id) values ('58-9487001', '2022-12-05', 1, 32);
+insert into rented_instrument (receipt_id, start_date, student_db_id, instrument_db_id) values ('82-9098276', '2022-12-02', 2, 94);
+insert into rented_instrument (receipt_id, start_date, student_db_id, instrument_db_id) values ('17-0090711', '2022-12-02', 3, 95);
+insert into rented_instrument (receipt_id, start_date, student_db_id, instrument_db_id) values ('06-3573524', '2022-12-07', 4, 77);
+insert into rented_instrument (receipt_id, start_date, student_db_id, instrument_db_id) values ('69-2619587', '2022-12-01', 5, 27);
+insert into rented_instrument (receipt_id, start_date, student_db_id, instrument_db_id) values ('40-3440070', '2022-12-05', 6, 38);
+insert into rented_instrument (receipt_id, start_date, student_db_id, instrument_db_id) values ('45-0011073', '2022-12-02', 3, 18);
+insert into rented_instrument (receipt_id, start_date, student_db_id, instrument_db_id) values ('13-4342961', '2022-12-01', 8, 22);
+insert into rented_instrument (receipt_id, start_date, student_db_id, instrument_db_id) values ('74-4818025', '2022-12-10', 9, 89);
+insert into rented_instrument (receipt_id, start_date, student_db_id, instrument_db_id) values ('65-6467812', '2022-12-02', 10, 74);
+insert into rented_instrument (receipt_id, start_date, student_db_id, instrument_db_id) values ('95-4074116', '2022-12-02', 1, 33);
