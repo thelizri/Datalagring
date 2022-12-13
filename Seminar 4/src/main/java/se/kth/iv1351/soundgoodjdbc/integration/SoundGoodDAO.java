@@ -102,6 +102,20 @@ public class SoundGoodDAO {
         }
     }
 
+    public int getAmountOfRentalsByStudent(String studentPersonalNumber) throws SoundGoodDBException{
+        try{
+            getAmountOfRentalsForStudent.setString(1,studentPersonalNumber);
+            ResultSet rs = getAmountOfRentalsForStudent.executeQuery();
+            if(rs.next()){
+                return rs.getInt("COUNT");
+            }
+            rs.close();
+        }catch(Exception exception){
+            handleException("Could not get amount of rentals by student.", exception);
+        }
+        return -1;
+    }
+
     public List<Instrument> listInstruments(String type) throws SoundGoodDBException {
 
         List<Instrument> instruments = null;
@@ -119,7 +133,6 @@ public class SoundGoodDAO {
             }
             rs.close();
         }catch(Exception exception){
-            exception.printStackTrace();
             handleException("Could not list instruments.", exception);
         }
         return instruments;

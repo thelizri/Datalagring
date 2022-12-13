@@ -63,6 +63,8 @@ public class BlockingInterpreter {
                         }
                         break;
                     case RENT:
+                        //First parameter is personal number. The second is product id of instrument
+                        controller.rentInstrument(cmdLine.getParameter(0), cmdLine.getParameter(1));
                         break;
                     case TERMINATE:
                         break;

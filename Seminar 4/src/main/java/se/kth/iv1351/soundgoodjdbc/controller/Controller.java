@@ -43,4 +43,13 @@ public class Controller {
         }
     }
 
+    public void rentInstrument(String studentPersonalNumber, String instrumentProductID) throws InstrumentException{
+        try{
+            int amountOfRentals = soundGoodDb.getAmountOfRentalsByStudent(studentPersonalNumber);
+            System.out.println("Student: "+studentPersonalNumber+" has this amount of rentals: "+amountOfRentals);
+        } catch(Exception e){
+            throw new InstrumentException("Could not rent an instrument", e);
+        }
+    }
+
 }
