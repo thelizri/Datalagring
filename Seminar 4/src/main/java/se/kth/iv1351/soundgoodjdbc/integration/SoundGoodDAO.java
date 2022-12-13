@@ -17,7 +17,8 @@ public class SoundGoodDAO {
     private Connection connection;
     private PreparedStatement listInstruments;
     private PreparedStatement getAmountOfRentalsForStudent;
-    private PreparedStatement getDatabaseIDOfStudent;
+    private PreparedStatement getDatabaseIDofStudent;
+    private PreparedStatement getDatabaseIDofInstrument;
     private PreparedStatement rentInstrument;
     private PreparedStatement terminateRental;
 
@@ -46,8 +47,10 @@ public class SoundGoodDAO {
                 "WHERE END_DATE IS NULL AND PERSONAL_NUMBER = ?\n" +
                 "GROUP BY STUDENT_DB_ID, STUDENT.PERSONAL_NUMBER");
 
-        getDatabaseIDOfStudent = connection.prepareStatement("SELECT DATABASE_ID FROM STUDENT\n" +
+        getDatabaseIDofStudent = connection.prepareStatement("SELECT DATABASE_ID FROM STUDENT\n" +
                 "WHERE PERSONAL_NUMBER = ?");
+        getDatabaseIDofInstrument = connection.prepareStatement("SELECT DATABASE_ID FROM PHYSICAL_INSTRUMENTS\n" +
+                "WHERE INSTRUMENT_ID = ?");
     }
 
     private void connectToDB() throws ClassNotFoundException, SQLException {
