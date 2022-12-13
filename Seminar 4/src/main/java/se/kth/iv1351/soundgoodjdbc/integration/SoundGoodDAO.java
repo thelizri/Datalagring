@@ -51,6 +51,8 @@ public class SoundGoodDAO {
                 "WHERE PERSONAL_NUMBER = ?");
         getDatabaseIDofInstrument = connection.prepareStatement("SELECT DATABASE_ID FROM PHYSICAL_INSTRUMENTS\n" +
                 "WHERE INSTRUMENT_ID = ?");
+        rentInstrument = connection.prepareStatement("INSERT INTO RENTED_INSTRUMENT(STUDENT_DB_ID, INSTRUMENT_DB_ID, START_DATE, RECEIPT_ID)\n" +
+                "VALUES (?,?, CURRENT_DATE, ?)");
     }
 
     private void connectToDB() throws ClassNotFoundException, SQLException {
