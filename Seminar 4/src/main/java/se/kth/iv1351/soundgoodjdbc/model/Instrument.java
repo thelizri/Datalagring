@@ -66,10 +66,6 @@ public class Instrument implements InstrumentDTO {
      */
     @Override
     public String toString() {
-        return "Instrument{" +
-                "brand='" + brand + '\'' +
-                ", price=" + price + '\'' +
-                ", instrumentID='" + instrumentId + '\'' +
-                '}';
+        return "Instrument: "+type+", Brand: "+brand+", "+price+"kr, "+"Product Number: "+instrumentId;
     }
 }
