@@ -68,6 +68,8 @@ public class BlockingInterpreter {
                         System.out.println(response);
                         break;
                     case TERMINATE:
+                        String feedback = controller.endRental(cmdLine.getParameter(0));
+                        System.out.println(feedback);
                         break;
                     case ILLEGAL_COMMAND:
                         System.out.println("illegal command");

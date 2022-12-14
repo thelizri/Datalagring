@@ -46,6 +46,16 @@ public class Controller {
         }
     }
 
+    public String endRental(String receiptID) throws InstrumentException{
+        try{
+            soundGoodDb.endRental(receiptID);
+            commitOngoingTransaction("Could not end rental");
+            return "Successfully closed rental";
+        }catch(Exception e){
+            throw new InstrumentException("Could not end rental");
+        }
+    }
+
     public String rentInstrument(String studentPersonalNumber, String instrumentProductID) throws InstrumentException{
         try{
             int amountOfRentals = soundGoodDb.getAmountOfRentalsByStudent(studentPersonalNumber);

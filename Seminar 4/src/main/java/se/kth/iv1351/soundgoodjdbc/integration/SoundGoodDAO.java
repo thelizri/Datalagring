@@ -60,6 +60,19 @@ public class SoundGoodDAO {
                 "WHERE INSTRUMENT_ID = ?");
         rentInstrument = connection.prepareStatement("INSERT INTO RENTED_INSTRUMENT(STUDENT_DB_ID, INSTRUMENT_DB_ID, START_DATE, RECEIPT_ID)\n" +
                 "VALUES (?,?, CURRENT_DATE, ?)");
+
+        terminateRental = connection.prepareStatement("UPDATE RENTED_INSTRUMENT\n" +
+                "SET END_DATE = CURRENT_DATE\n" +
+                "WHERE RECEIPT_ID = ?");
+    }
+
+    public void endRental(String receiptID) throws SoundGoodDBException{
+        try{
+            terminateRental.setString(1,receiptID);
+            terminateRental.executeUpdate();
+        }catch(Exception exception) {
+            handleException("Could not terminate rental", exception);
+        }
     }
 
     private void connectToDB() throws ClassNotFoundException, SQLException {
