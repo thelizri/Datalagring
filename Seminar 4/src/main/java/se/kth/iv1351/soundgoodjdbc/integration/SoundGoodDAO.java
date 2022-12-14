@@ -22,6 +22,10 @@ public class SoundGoodDAO {
     private PreparedStatement rentInstrument;
     private PreparedStatement terminateRental;
 
+    /**
+     * Creates new instance of the SoundGood Database Access Object
+     * @throws SoundGoodDBException
+     */
     public SoundGoodDAO() throws SoundGoodDBException {
         try {
             connectToDB();
@@ -66,6 +70,11 @@ public class SoundGoodDAO {
                 "WHERE RECEIPT_ID = ?");
     }
 
+    /**
+     * Adds the current date as end date to a rental with specific receipt ID
+     * @param receiptID
+     * @throws SoundGoodDBException
+     */
     public void endRental(String receiptID) throws SoundGoodDBException{
         try{
             terminateRental.setString(1,receiptID);
@@ -98,7 +107,7 @@ public class SoundGoodDAO {
         }
     }
 
-    public void handleException(String failureMessage, Exception exception) throws SoundGoodDBException {
+    private void handleException(String failureMessage, Exception exception) throws SoundGoodDBException {
         String completeFailureMessage = failureMessage;
         try {
             connection.rollback();
@@ -114,6 +123,12 @@ public class SoundGoodDAO {
         }
     }
 
+    /**
+     * Retrieves the amount of active rentals listed under student's account
+     * @param studentPersonalNumber The student's personal number
+     * @return The amount of rentals
+     * @throws SoundGoodDBException throws if student doesn't exist
+     */
     public int getAmountOfRentalsByStudent(String studentPersonalNumber) throws SoundGoodDBException{
         try{
             getAmountOfRentalsForStudent.setString(1,studentPersonalNumber);
@@ -133,6 +148,13 @@ public class SoundGoodDAO {
         return -1;
     }
 
+
+    /**
+     * Gets the database id of the student
+     * @param studentPersonalNumber student's personal number
+     * @return the database id of the student
+     * @throws SoundGoodDBException if student doesn't exist
+     */
     public int getStudentDatabaseID(String studentPersonalNumber) throws SoundGoodDBException{
         try{
             getDatabaseIDofStudent.setString(1,studentPersonalNumber);
@@ -149,6 +171,12 @@ public class SoundGoodDAO {
         return -1;
     }
 
+    /**
+     * Gets the database id of the instrument
+     * @param instrumentProductID the product if of the instrument
+     * @return database id of the instrument
+     * @throws SoundGoodDBException if instrument doesn't exist
+     */
     public int getInstrumentDatabaseID(String instrumentProductID) throws SoundGoodDBException{
         try{
             getDatabaseIDofInstrument.setString(1,instrumentProductID);
@@ -165,6 +193,13 @@ public class SoundGoodDAO {
         return -1;
     }
 
+    /**
+     * Inserts a new rental into the table with rentals
+     * @param studentDbID student's database id
+     * @param instrumentDbID instrument's database id
+     * @param receiptID the receipt id
+     * @throws SoundGoodDBException if unable to rent the instrument
+     */
     public void rentInstrument(int studentDbID, int instrumentDbID, String receiptID) throws SoundGoodDBException{
         try{
             rentInstrument.setInt(1, studentDbID);
@@ -176,6 +211,12 @@ public class SoundGoodDAO {
         }
     }
 
+    /**
+     * Returns a list with instruments that are available for rental
+     * @param type The type of the instrument: 'Guitar', or 'Piano'
+     * @return The list with available instruments
+     * @throws SoundGoodDBException if unable to retrieve the list
+     */
     public List<Instrument> listInstruments(String type) throws SoundGoodDBException {
 
         List<Instrument> instruments = null;
