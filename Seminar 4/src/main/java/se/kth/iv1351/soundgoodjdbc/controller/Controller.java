@@ -36,6 +36,12 @@ public class Controller {
         }
     }
 
+    /**
+     * Retrieves a list from the database with instruments that are available for rental
+     * @param instrumentType The type of the instrument. For example 'Guitar'. First letter should be capitalized.
+     * @return The list with available instruments.
+     * @throws InstrumentException if unable to retrieve the list with instruments
+     */
     public List<? extends InstrumentDTO> listInstrument(String instrumentType) throws InstrumentException {
         try {
             List<? extends InstrumentDTO> result = soundGoodDb.listInstruments(instrumentType);
@@ -46,6 +52,13 @@ public class Controller {
         }
     }
 
+    /**
+     * Updates a specified rental in the database with the current date as end date, effectively
+     * terminating the rental.
+     * @param receiptID The id of the receipt for the rental a.k.a the order id
+     * @return A message confirming the termination of the rental
+     * @throws InstrumentException if unable to terminate the rental
+     */
     public String endRental(String receiptID) throws InstrumentException{
         try{
             soundGoodDb.endRental(receiptID);
@@ -56,6 +69,13 @@ public class Controller {
         }
     }
 
+    /**
+     * Creates a new rental in the database
+     * @param studentPersonalNumber The student's personal number
+     * @param instrumentProductID The instrument id of the instrument to be rented
+     * @return Confirmation message of successful rental
+     * @throws InstrumentException if unable to create the rental
+     */
     public String rentInstrument(String studentPersonalNumber, String instrumentProductID) throws InstrumentException{
         try{
             int amountOfRentals = soundGoodDb.getAmountOfRentalsByStudent(studentPersonalNumber);
