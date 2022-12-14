@@ -106,8 +106,11 @@ public class SoundGoodDAO {
         try{
             getAmountOfRentalsForStudent.setString(1,studentPersonalNumber);
             ResultSet rs = getAmountOfRentalsForStudent.executeQuery();
+
             if(rs.next()){
                 return rs.getInt("COUNT");
+            }else{
+                handleException("Student does not exist", null);
             }
             rs.close();
         }catch(Exception exception){
@@ -122,6 +125,8 @@ public class SoundGoodDAO {
             ResultSet rs = getDatabaseIDofStudent.executeQuery();
             if(rs.next()){
                 return rs.getInt("DATABASE_ID");
+            }else{
+                handleException("Student does not exist", null);
             }
             rs.close();
         }catch(Exception exception){
@@ -136,12 +141,25 @@ public class SoundGoodDAO {
             ResultSet rs = getDatabaseIDofInstrument.executeQuery();
             if(rs.next()){
                 return rs.getInt("DATABASE_ID");
+            }else{
+                handleException("Instrument does not exist", null);
             }
             rs.close();
         }catch(Exception exception){
-            handleException("Could not retrieve database id of student", exception);
+            handleException("Could not retrieve database id of student.", exception);
         }
         return -1;
+    }
+
+    public void rentInstrument(int studentDbID, int instrumentDbID, String receiptID) throws SoundGoodDBException{
+        try{
+            rentInstrument.setInt(1, studentDbID);
+            rentInstrument.setInt(2,instrumentDbID);
+            rentInstrument.setString(3,receiptID);
+            rentInstrument.executeUpdate();
+        }catch(Exception exception){
+            handleException("Could not rent instrument.", exception);
+        }
     }
 
     public List<Instrument> listInstruments(String type) throws SoundGoodDBException {

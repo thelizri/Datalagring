@@ -7,6 +7,7 @@ import main.java.se.kth.iv1351.soundgoodjdbc.model.InstrumentDTO;
 import main.java.se.kth.iv1351.soundgoodjdbc.model.InstrumentException;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * This is the application's only controller, all calls to the model pass here.
@@ -37,7 +38,9 @@ public class Controller {
 
     public List<? extends InstrumentDTO> listInstrument(String instrumentType) throws InstrumentException {
         try {
-            return soundGoodDb.listInstruments(instrumentType);
+            List<? extends InstrumentDTO> result = soundGoodDb.listInstruments(instrumentType);
+            commitOngoingTransaction("Could not list available instruments.");
+            return result;
         } catch (Exception e) {
             throw new InstrumentException("Could not list instruments", e);
         }
@@ -49,19 +52,30 @@ public class Controller {
             if(amountOfRentals>=2){
                 return "You already have 2 active rentals under your name.";
             }
-            System.out.println(amountOfRentals);
             //Get database id of student
             int studentDbID = soundGoodDb.getStudentDatabaseID(studentPersonalNumber);
-            System.out.println(studentDbID);
+            if(studentDbID<0) return "Student does not exist";
 
             //Get database id of instrument
             int instrumentDbID = soundGoodDb.getInstrumentDatabaseID(instrumentProductID);
-            System.out.println(instrumentDbID);
+            if(instrumentDbID<0) return "Instrument does not exist";
 
+            //Create receipt
+            String receipt = createReceiptID(studentPersonalNumber, instrumentProductID);
+            soundGoodDb.rentInstrument(studentDbID, instrumentDbID, receipt);
+
+            commitOngoingTransaction("Could not rent instrument");
         } catch(Exception e){
             throw new InstrumentException("Could not rent an instrument", e);
         }
         return "Success";
+    }
+
+    private String createReceiptID(String studentPersonalNumber, String instrumentProductID){
+        String date = String.valueOf(java.time.LocalDate.now());
+        Random random = new Random();
+        int x = random.nextInt();
+        return ""+x+date+studentPersonalNumber+instrumentProductID;
     }
 
 }
