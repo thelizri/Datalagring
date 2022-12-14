@@ -65,10 +65,11 @@ public class Controller {
             soundGoodDb.rentInstrument(studentDbID, instrumentDbID, receipt);
 
             commitOngoingTransaction("Could not rent instrument");
+            return "This is your order number: " +receipt+
+                    "\n Use this when returning the instrument";
         } catch(Exception e){
             throw new InstrumentException("Could not rent an instrument", e);
         }
-        return "Success";
     }
 
     private String createReceiptID(String studentPersonalNumber, String instrumentProductID){

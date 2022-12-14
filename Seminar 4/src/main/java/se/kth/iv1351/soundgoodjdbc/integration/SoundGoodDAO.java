@@ -33,12 +33,19 @@ public class SoundGoodDAO {
 
 
     private void prepareStatements() throws SQLException{
-        listInstruments = connection.prepareStatement("SELECT DISTINCT INSTRUMENT_ID, BRAND, PRICE, INSTRUMENT_TYPE\n" +
+        listInstruments = connection.prepareStatement("SELECT PHYSICAL_INSTRUMENTS.DATABASE_ID,\n" +
+                "\tPHYSICAL_INSTRUMENTS.INSTRUMENT_ID,\n" +
+                "\tPHYSICAL_INSTRUMENTS.BRAND,\n" +
+                "\tPHYSICAL_INSTRUMENTS.PRICE,\n" +
+                "\tPHYSICAL_INSTRUMENTS.INSTRUMENT_TYPE\n" +
                 "FROM PHYSICAL_INSTRUMENTS\n" +
-                "LEFT JOIN RENTED_INSTRUMENT ON PHYSICAL_INSTRUMENTS.DATABASE_ID = RENTED_INSTRUMENT.INSTRUMENT_DB_ID\n" +
-                "WHERE (RENTED_INSTRUMENT.INSTRUMENT_DB_ID IS NULL OR END_DATE IS NOT NULL)\n" +
-                "AND INSTRUMENT_TYPE = ?\n" +
-                "ORDER BY PRICE");
+                "LEFT JOIN\n" +
+                "\t(SELECT DISTINCT *\n" +
+                "\t\tFROM PHYSICAL_INSTRUMENTS\n" +
+                "\t\tINNER JOIN RENTED_INSTRUMENT ON PHYSICAL_INSTRUMENTS.DATABASE_ID = RENTED_INSTRUMENT.INSTRUMENT_DB_ID\n" +
+                "\t\tWHERE END_DATE IS NULL) AS FOO ON PHYSICAL_INSTRUMENTS.DATABASE_ID = FOO.DATABASE_ID\n" +
+                "WHERE FOO.DATABASE_ID IS NULL AND PHYSICAL_INSTRUMENTS.INSTRUMENT_TYPE = ?\n" +
+                "ORDER BY PHYSICAL_INSTRUMENTS.INSTRUMENT_TYPE, PHYSICAL_INSTRUMENTS.PRICE");
 
         getAmountOfRentalsForStudent = connection.prepareStatement("SELECT (COUNT(*)-1) AS \"COUNT\", STUDENT_DB_ID, PERSONAL_NUMBER\n" +
                 "FROM RENTED_INSTRUMENT\n" +
@@ -94,25 +101,19 @@ public class SoundGoodDAO {
         }
     }
 
-    private void closeResultSet(String failureMessage, ResultSet result) throws SoundGoodDBException {
-        try {
-            result.close();
-        } catch (Exception exception) {
-            throw new SoundGoodDBException(failureMessage + " Could not close result set.", exception);
-        }
-    }
-
     public int getAmountOfRentalsByStudent(String studentPersonalNumber) throws SoundGoodDBException{
         try{
             getAmountOfRentalsForStudent.setString(1,studentPersonalNumber);
             ResultSet rs = getAmountOfRentalsForStudent.executeQuery();
+            int result = -1;
 
             if(rs.next()){
-                return rs.getInt("COUNT");
+                result= rs.getInt("COUNT");
             }else{
                 handleException("Student does not exist", null);
             }
             rs.close();
+            return result;
         }catch(Exception exception){
             handleException("Could not get amount of rentals by student.", exception);
         }
