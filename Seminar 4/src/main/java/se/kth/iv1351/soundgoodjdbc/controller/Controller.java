@@ -66,7 +66,7 @@ public class Controller {
 
             commitOngoingTransaction("Could not rent instrument");
             return "This is your order number: " +receipt+
-                    "\n Use this when returning the instrument";
+                    "\nUse this when returning the instrument";
         } catch(Exception e){
             throw new InstrumentException("Could not rent an instrument", e);
         }
@@ -75,7 +75,7 @@ public class Controller {
     private String createReceiptID(String studentPersonalNumber, String instrumentProductID){
         String date = String.valueOf(java.time.LocalDate.now());
         Random random = new Random();
-        int x = random.nextInt();
+        int x = random.nextInt(0, 300000);
         return ""+x+date+studentPersonalNumber+instrumentProductID;
     }
 
