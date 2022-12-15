@@ -14,12 +14,12 @@ import java.util.List;
 public class SoundGoodDAO {
 
     private Connection connection;
-    private PreparedStatement retrieveAvailableInstruments;
+    private PreparedStatement readAvailableInstruments;
     private PreparedStatement readRentalsByStudent;
     private PreparedStatement readDatabaseIDofStudent;
     private PreparedStatement readDatabaseIDofInstrument;
-    private PreparedStatement rentInstrument;
-    private PreparedStatement terminateRental;
+    private PreparedStatement createRentalInstrument;
+    private PreparedStatement updateEndDateRental;
 
     /**
      * Creates new instance of the SoundGood Database Access Object
@@ -36,7 +36,7 @@ public class SoundGoodDAO {
 
 
     private void prepareStatements() throws SQLException{
-        retrieveAvailableInstruments = connection.prepareStatement("SELECT PHYSICAL_INSTRUMENTS.DATABASE_ID,\n" +
+        readAvailableInstruments = connection.prepareStatement("SELECT PHYSICAL_INSTRUMENTS.DATABASE_ID,\n" +
                 "\tPHYSICAL_INSTRUMENTS.INSTRUMENT_ID,\n" +
                 "\tPHYSICAL_INSTRUMENTS.BRAND,\n" +
                 "\tPHYSICAL_INSTRUMENTS.PRICE,\n" +
@@ -61,10 +61,10 @@ public class SoundGoodDAO {
                 "WHERE PERSONAL_NUMBER = ?");
         readDatabaseIDofInstrument = connection.prepareStatement("SELECT DATABASE_ID FROM PHYSICAL_INSTRUMENTS\n" +
                 "WHERE INSTRUMENT_ID = ?");
-        rentInstrument = connection.prepareStatement("INSERT INTO RENTED_INSTRUMENT(STUDENT_DB_ID, INSTRUMENT_DB_ID, START_DATE, RECEIPT_ID)\n" +
+        createRentalInstrument = connection.prepareStatement("INSERT INTO RENTED_INSTRUMENT(STUDENT_DB_ID, INSTRUMENT_DB_ID, START_DATE, RECEIPT_ID)\n" +
                 "VALUES (?,?, CURRENT_DATE, ?)");
 
-        terminateRental = connection.prepareStatement("UPDATE RENTED_INSTRUMENT\n" +
+        updateEndDateRental = connection.prepareStatement("UPDATE RENTED_INSTRUMENT\n" +
                 "SET END_DATE = CURRENT_DATE\n" +
                 "WHERE RECEIPT_ID = ?");
     }
@@ -76,8 +76,8 @@ public class SoundGoodDAO {
      */
     public void updateEndRental(String receiptID) throws SoundGoodDBException{
         try{
-            terminateRental.setString(1,receiptID);
-            terminateRental.executeUpdate();
+            updateEndDateRental.setString(1,receiptID);
+            updateEndDateRental.executeUpdate();
         }catch(Exception exception) {
             handleException("Could not terminate rental", exception);
         }
@@ -201,10 +201,10 @@ public class SoundGoodDAO {
      */
     public void createRentalOfInstrument(int studentDbID, int instrumentDbID, String receiptID) throws SoundGoodDBException{
         try{
-            rentInstrument.setInt(1, studentDbID);
-            rentInstrument.setInt(2,instrumentDbID);
-            rentInstrument.setString(3,receiptID);
-            rentInstrument.executeUpdate();
+            createRentalInstrument.setInt(1, studentDbID);
+            createRentalInstrument.setInt(2,instrumentDbID);
+            createRentalInstrument.setString(3,receiptID);
+            createRentalInstrument.executeUpdate();
         }catch(Exception exception){
             handleException("Could not rent instrument.", exception);
         }
@@ -220,8 +220,8 @@ public class SoundGoodDAO {
 
         List<Instrument> instruments = null;
         try{
-            retrieveAvailableInstruments.setString(1, type);
-            ResultSet rs = retrieveAvailableInstruments.executeQuery();
+            readAvailableInstruments.setString(1, type);
+            ResultSet rs = readAvailableInstruments.executeQuery();
             instruments = new ArrayList<Instrument>();
             while (rs.next()) {
                 instruments.add(new Instrument(
