@@ -77,13 +77,15 @@ public class Controller {
      */
     public String rentInstrument(String studentPersonalNumber, String instrumentProductID) throws InstrumentException{
         try{
+            //Get database id of student
+            int studentDbID = soundGoodDb.readStudentDatabaseId(studentPersonalNumber);
+            if(studentDbID<0) return "Student does not exist";
+
+            //Checks the amount of rentals by student
             int amountOfRentals = soundGoodDb.readCurrentAmountOfRentalsHeldByStudent(studentPersonalNumber);
             if(amountOfRentals>=2){
                 return "You already have 2 active rentals under your name.";
             }
-            //Get database id of student
-            int studentDbID = soundGoodDb.readStudentDatabaseId(studentPersonalNumber);
-            if(studentDbID<0) return "Student does not exist";
 
             //Get database id of instrument
             int instrumentDbID = soundGoodDb.readInstrumentDatabaseID(instrumentProductID);
