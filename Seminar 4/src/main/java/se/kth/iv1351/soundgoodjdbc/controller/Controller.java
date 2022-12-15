@@ -2,7 +2,6 @@ package main.java.se.kth.iv1351.soundgoodjdbc.controller;
 
 import main.java.se.kth.iv1351.soundgoodjdbc.integration.SoundGoodDAO;
 import main.java.se.kth.iv1351.soundgoodjdbc.integration.SoundGoodDBException;
-import main.java.se.kth.iv1351.soundgoodjdbc.model.Instrument;
 import main.java.se.kth.iv1351.soundgoodjdbc.model.InstrumentDTO;
 import main.java.se.kth.iv1351.soundgoodjdbc.model.InstrumentException;
 
@@ -44,7 +43,7 @@ public class Controller {
      */
     public List<? extends InstrumentDTO> listInstrument(String instrumentType) throws InstrumentException {
         try {
-            List<? extends InstrumentDTO> result = soundGoodDb.listInstruments(instrumentType);
+            List<? extends InstrumentDTO> result = soundGoodDb.readAvailableInstruments(instrumentType);
             commitOngoingTransaction("Could not list available instruments.");
             return result;
         } catch (Exception e) {
@@ -61,7 +60,7 @@ public class Controller {
      */
     public String endRental(String receiptID) throws InstrumentException{
         try{
-            soundGoodDb.endRental(receiptID);
+            soundGoodDb.updateEndRental(receiptID);
             commitOngoingTransaction("Could not end rental");
             return "Successfully closed rental";
         }catch(Exception e){
@@ -78,21 +77,21 @@ public class Controller {
      */
     public String rentInstrument(String studentPersonalNumber, String instrumentProductID) throws InstrumentException{
         try{
-            int amountOfRentals = soundGoodDb.getAmountOfRentalsByStudent(studentPersonalNumber);
+            int amountOfRentals = soundGoodDb.readCurrentAmountOfRentalsHeldByStudent(studentPersonalNumber);
             if(amountOfRentals>=2){
                 return "You already have 2 active rentals under your name.";
             }
             //Get database id of student
-            int studentDbID = soundGoodDb.getStudentDatabaseID(studentPersonalNumber);
+            int studentDbID = soundGoodDb.readStudentDatabaseId(studentPersonalNumber);
             if(studentDbID<0) return "Student does not exist";
 
             //Get database id of instrument
-            int instrumentDbID = soundGoodDb.getInstrumentDatabaseID(instrumentProductID);
+            int instrumentDbID = soundGoodDb.readInstrumentDatabaseID(instrumentProductID);
             if(instrumentDbID<0) return "Instrument does not exist";
 
             //Create receipt
             String receipt = createReceiptID(studentPersonalNumber, instrumentProductID);
-            soundGoodDb.rentInstrument(studentDbID, instrumentDbID, receipt);
+            soundGoodDb.createRentalOfInstrument(studentDbID, instrumentDbID, receipt);
 
             commitOngoingTransaction("Could not rent instrument");
             return "This is your order number: " +receipt+

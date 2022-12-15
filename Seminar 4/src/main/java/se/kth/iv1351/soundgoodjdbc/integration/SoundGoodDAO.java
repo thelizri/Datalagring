@@ -1,7 +1,6 @@
 package main.java.se.kth.iv1351.soundgoodjdbc.integration;
 
 import main.java.se.kth.iv1351.soundgoodjdbc.model.Instrument;
-import main.java.se.kth.iv1351.soundgoodjdbc.model.InstrumentDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,10 +14,10 @@ import java.util.List;
 public class SoundGoodDAO {
 
     private Connection connection;
-    private PreparedStatement listInstruments;
-    private PreparedStatement getAmountOfRentalsForStudent;
-    private PreparedStatement getDatabaseIDofStudent;
-    private PreparedStatement getDatabaseIDofInstrument;
+    private PreparedStatement retrieveAvailableInstruments;
+    private PreparedStatement readRentalsByStudent;
+    private PreparedStatement readDatabaseIDofStudent;
+    private PreparedStatement readDatabaseIDofInstrument;
     private PreparedStatement rentInstrument;
     private PreparedStatement terminateRental;
 
@@ -37,7 +36,7 @@ public class SoundGoodDAO {
 
 
     private void prepareStatements() throws SQLException{
-        listInstruments = connection.prepareStatement("SELECT PHYSICAL_INSTRUMENTS.DATABASE_ID,\n" +
+        retrieveAvailableInstruments = connection.prepareStatement("SELECT PHYSICAL_INSTRUMENTS.DATABASE_ID,\n" +
                 "\tPHYSICAL_INSTRUMENTS.INSTRUMENT_ID,\n" +
                 "\tPHYSICAL_INSTRUMENTS.BRAND,\n" +
                 "\tPHYSICAL_INSTRUMENTS.PRICE,\n" +
@@ -51,16 +50,16 @@ public class SoundGoodDAO {
                 "WHERE FOO.DATABASE_ID IS NULL AND PHYSICAL_INSTRUMENTS.INSTRUMENT_TYPE = ?\n" +
                 "ORDER BY PHYSICAL_INSTRUMENTS.INSTRUMENT_TYPE, PHYSICAL_INSTRUMENTS.PRICE");
 
-        getAmountOfRentalsForStudent = connection.prepareStatement("SELECT (COUNT(*)-1) AS \"COUNT\", STUDENT_DB_ID, PERSONAL_NUMBER\n" +
+        readRentalsByStudent = connection.prepareStatement("SELECT (COUNT(*)-1) AS \"COUNT\", STUDENT_DB_ID, PERSONAL_NUMBER\n" +
                 "FROM RENTED_INSTRUMENT\n" +
                 "RIGHT JOIN STUDENT ON RENTED_INSTRUMENT.STUDENT_DB_ID = STUDENT.DATABASE_ID\n" +
                 "WHERE PERSONAL_NUMBER = ?\n" +
                 "GROUP BY STUDENT_DB_ID, PERSONAL_NUMBER\n" +
                 "ORDER BY STUDENT_DB_ID");
 
-        getDatabaseIDofStudent = connection.prepareStatement("SELECT DATABASE_ID FROM STUDENT\n" +
+        readDatabaseIDofStudent = connection.prepareStatement("SELECT DATABASE_ID FROM STUDENT\n" +
                 "WHERE PERSONAL_NUMBER = ?");
-        getDatabaseIDofInstrument = connection.prepareStatement("SELECT DATABASE_ID FROM PHYSICAL_INSTRUMENTS\n" +
+        readDatabaseIDofInstrument = connection.prepareStatement("SELECT DATABASE_ID FROM PHYSICAL_INSTRUMENTS\n" +
                 "WHERE INSTRUMENT_ID = ?");
         rentInstrument = connection.prepareStatement("INSERT INTO RENTED_INSTRUMENT(STUDENT_DB_ID, INSTRUMENT_DB_ID, START_DATE, RECEIPT_ID)\n" +
                 "VALUES (?,?, CURRENT_DATE, ?)");
@@ -75,7 +74,7 @@ public class SoundGoodDAO {
      * @param receiptID
      * @throws SoundGoodDBException
      */
-    public void endRental(String receiptID) throws SoundGoodDBException{
+    public void updateEndRental(String receiptID) throws SoundGoodDBException{
         try{
             terminateRental.setString(1,receiptID);
             terminateRental.executeUpdate();
@@ -129,10 +128,10 @@ public class SoundGoodDAO {
      * @return The amount of rentals
      * @throws SoundGoodDBException throws if student doesn't exist
      */
-    public int getAmountOfRentalsByStudent(String studentPersonalNumber) throws SoundGoodDBException{
+    public int readCurrentAmountOfRentalsHeldByStudent(String studentPersonalNumber) throws SoundGoodDBException{
         try{
-            getAmountOfRentalsForStudent.setString(1,studentPersonalNumber);
-            ResultSet rs = getAmountOfRentalsForStudent.executeQuery();
+            readRentalsByStudent.setString(1,studentPersonalNumber);
+            ResultSet rs = readRentalsByStudent.executeQuery();
             int result = -1;
 
             if(rs.next()){
@@ -155,10 +154,10 @@ public class SoundGoodDAO {
      * @return the database id of the student
      * @throws SoundGoodDBException if student doesn't exist
      */
-    public int getStudentDatabaseID(String studentPersonalNumber) throws SoundGoodDBException{
+    public int readStudentDatabaseId(String studentPersonalNumber) throws SoundGoodDBException{
         try{
-            getDatabaseIDofStudent.setString(1,studentPersonalNumber);
-            ResultSet rs = getDatabaseIDofStudent.executeQuery();
+            readDatabaseIDofStudent.setString(1,studentPersonalNumber);
+            ResultSet rs = readDatabaseIDofStudent.executeQuery();
             if(rs.next()){
                 return rs.getInt("DATABASE_ID");
             }else{
@@ -177,10 +176,10 @@ public class SoundGoodDAO {
      * @return database id of the instrument
      * @throws SoundGoodDBException if instrument doesn't exist
      */
-    public int getInstrumentDatabaseID(String instrumentProductID) throws SoundGoodDBException{
+    public int readInstrumentDatabaseID(String instrumentProductID) throws SoundGoodDBException{
         try{
-            getDatabaseIDofInstrument.setString(1,instrumentProductID);
-            ResultSet rs = getDatabaseIDofInstrument.executeQuery();
+            readDatabaseIDofInstrument.setString(1,instrumentProductID);
+            ResultSet rs = readDatabaseIDofInstrument.executeQuery();
             if(rs.next()){
                 return rs.getInt("DATABASE_ID");
             }else{
@@ -200,7 +199,7 @@ public class SoundGoodDAO {
      * @param receiptID the receipt id
      * @throws SoundGoodDBException if unable to rent the instrument
      */
-    public void rentInstrument(int studentDbID, int instrumentDbID, String receiptID) throws SoundGoodDBException{
+    public void createRentalOfInstrument(int studentDbID, int instrumentDbID, String receiptID) throws SoundGoodDBException{
         try{
             rentInstrument.setInt(1, studentDbID);
             rentInstrument.setInt(2,instrumentDbID);
@@ -217,12 +216,12 @@ public class SoundGoodDAO {
      * @return The list with available instruments
      * @throws SoundGoodDBException if unable to retrieve the list
      */
-    public List<Instrument> listInstruments(String type) throws SoundGoodDBException {
+    public List<Instrument> readAvailableInstruments(String type) throws SoundGoodDBException {
 
         List<Instrument> instruments = null;
         try{
-            listInstruments.setString(1, type);
-            ResultSet rs = listInstruments.executeQuery();
+            retrieveAvailableInstruments.setString(1, type);
+            ResultSet rs = retrieveAvailableInstruments.executeQuery();
             instruments = new ArrayList<Instrument>();
             while (rs.next()) {
                 instruments.add(new Instrument(
