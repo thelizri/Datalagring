@@ -20,6 +20,7 @@ public class SoundGoodDAO {
     private PreparedStatement readDatabaseIDofInstrument;
     private PreparedStatement createRentalInstrument;
     private PreparedStatement updateEndDateRental;
+    private PreparedStatement lockEndDateRental;
 
     /**
      * Creates new instance of the SoundGood Database Access Object
@@ -64,11 +65,10 @@ public class SoundGoodDAO {
         createRentalInstrument = connection.prepareStatement("INSERT INTO RENTED_INSTRUMENT(STUDENT_DB_ID, INSTRUMENT_DB_ID, START_DATE, RECEIPT_ID)\n" +
                 "VALUES (?,?, CURRENT_DATE, ?)");
 
-        updateEndDateRental = connection.prepareStatement("BEGIN;\n" +
-                "SELECT * FROM RENTED_INSTRUMENT WHERE RECEIPT_ID = ? FOR UPDATE;\n" +
-                "UPDATE RENTED_INSTRUMENT\n" +
+        updateEndDateRental = connection.prepareStatement("UPDATE RENTED_INSTRUMENT\n" +
                 "SET END_DATE = CURRENT_DATE\n" +
-                "WHERE RECEIPT_ID = ?;\n");
+                "WHERE RECEIPT_ID = ?");
+        lockEndDateRental = connection.prepareStatement("SELECT * FROM RENTED_INSTRUMENT WHERE RECEIPT_ID = ? FOR UPDATE;");
     }
 
     /**
@@ -78,8 +78,9 @@ public class SoundGoodDAO {
      */
     public void updateEndRental(String receiptID) throws SoundGoodDBException{
         try{
+            lockEndDateRental.setString(1,receiptID);
+            lockEndDateRental.executeQuery();
             updateEndDateRental.setString(1,receiptID);
-            updateEndDateRental.setString(2,receiptID);
             updateEndDateRental.executeUpdate();
         }catch(Exception exception) {
             handleException("Could not terminate rental", exception);
